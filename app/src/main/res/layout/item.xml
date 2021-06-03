@@ -28,7 +28,7 @@
                     android:id="@+id/img"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#4CAF50"
+                    android:background="#ADD87C"
                     android:scaleType="centerCrop" />
 
                 <ImageView
@@ -77,7 +77,7 @@
 
                 <TextView
                     android:id="@+id/txtres"
-                    android:layout_width="200dp"
+                    android:layout_width="260dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtid"
                     android:layout_marginLeft="10dp"
@@ -133,7 +133,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
-                    android:max="180"
+                    android:max="10"
                     android:progressDrawable="@drawable/progress_drawable"/>
 
             </RelativeLayout>

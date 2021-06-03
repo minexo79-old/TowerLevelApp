@@ -55,15 +55,18 @@ class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) { //(background colour) to do something
 
         holder.textviewId.setText("水塔編號   " + fieldList.get(position).get("Field_id"));
-        holder.textviewRes.setText("目前水位：" + fieldList.get(position).get("Field"));
-        holder.progressbar.setProgress(Integer.valueOf(fieldList.get(position).get("Field")),true);    //set max = 180
-        holder.textvolume.setText((String.format("%.1f",(Integer.valueOf(fieldList.get(position).get("Field")))*0.555))+"%");   //max value = 100/180
+        holder.textviewRes.setText("目前水位：" + (10 - Integer.parseInt(fieldList.get(position).get("Field"))) + " 公分");
+        // set max = 10
+        holder.progressbar.setProgress(10 - Integer.valueOf(fieldList.get(position).get("Field")),true);
+        // max value = 100/10
+        holder.textvolume.setText((String.format("%.1f",100.0 - (Integer.valueOf(fieldList.get(position).get("Field")))*10.0))+"%");
 
         if (String.valueOf(fieldList.get(position).get("Battery")) == "null") {
             holder.textviewbty.setText((String.valueOf(fieldList.get(position).get("Battery"))));
             // holder.battery_img.setBackgroundResource(R.drawable.ic_unknown);
         } else
-            holder.textviewbty.setText((String.format("%.1f", (Double.valueOf(fieldList.get(position).get("Battery")) - 3) * 83.3)) + "% ");
+            holder.textviewbty.setText(String.format("%.0f %%", Double.valueOf(fieldList.get(position).get("Battery")) * 25.64));
+//            holder.textviewbty.setText((String.format("%.1f", (Double.valueOf(fieldList.get(position).get("Battery")) - 3) * 83.3)) + "% ");
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, -5);
@@ -93,18 +96,18 @@ class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
         // Create a line chart from Field1 of ThinkSpeak Channel
         tsChart = new ThingSpeakLineChart(Integer.valueOf(fieldList.get(position).get("Field_id")), last_id);
 
-        // Get 200 entries at maximum 显示多少比数据
+        // Get 10 entries at maximum 显示多少比数据
         tsChart.setNumberOfEntries(10);
         // Set value axis labels on 10-unit interval
         tsChart.setValueAxisLabelInterval(10);
-        // Set date axis labels on 5-minute interval
+        // Set date axis labels on 1-minute interval
         tsChart.setDateAxisLabelInterval(1);
         // Show the line as a cubic spline
         tsChart.useSpline(true);
         // Set the line color
-        tsChart.setLineColor(Color.parseColor("#0086D3"));
+        tsChart.setLineColor(Color.parseColor("#005283"));
         // Set the axis color
-        tsChart.setAxisColor(Color.parseColor("#FFFFFF"));
+        tsChart.setAxisColor(Color.parseColor("#ffffff"));
         // Set the starting date (5 minutes ago) for the default viewport of the chart
         tsChart.setChartStartDate(calendar.getTime());
         // Set listener for chart data update

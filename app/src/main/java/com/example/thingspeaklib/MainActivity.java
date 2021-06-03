@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import lecho.lib.hellocharts.view.LineChartView;
+
 /*   ------ write by chiseng --------*/
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -54,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
        // LoadFeed();
 
         field_id_List = new LinkedList<>();
-        field_id_List.add(1383016);
-        field_id_List.add(950541);
+        field_id_List.add(1383016);     // Xin You TowerLevel
+//        field_id_List.add(950541);    // Zhi Cheng
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -87,38 +88,39 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
-    private void LoadFeedTest(){
+
+    private void LoadFeedTest() {
 
         fieldList = new LinkedList<>();
 
-        for(int f = 0 ; f < field_id_List.size() ; f ++){
-        tsChannel = new ThingSpeakChannel(field_id_List.get(f));
-        tsChannel.loadChannelFeed();
+        for(int f = 0 ; f < field_id_List.size() ; f ++) {
+            tsChannel = new ThingSpeakChannel(field_id_List.get(f));
+            tsChannel.loadChannelFeed();
 
-        tsChannel.setChannelFeedUpdateListener((channelId, fieldId, channelFeed) -> {        // Set listener for Channel feed update events
+            tsChannel.setChannelFeedUpdateListener((channelId, fieldId, channelFeed) -> {        // Set listener for Channel feed update events
 
-            List<Feed> data = channelFeed.getFeeds();       // Catch Feed // Get Last Entry Data from Feed
+                List<Feed> data = channelFeed.getFeeds();       // Catch Feed // Get Last Entry Data from Feed
 
-            int n = 0;
-            for (int i = 1; i < 9; i++) {
-                //  if (data.get(data.size() - 1).getField(i) != null ) {
-                ;
-                HashMap<String, String> hashMap = new HashMap<>();
-                if(i % 2 != 0 && data.get(data.size() - 1).getField(i) != null) {
-                    hashMap.put("Field", String.valueOf(data.get(data.size() - 1).getField(i)));
-                    hashMap.put("Field_id", String.valueOf(channelId));
-                    hashMap.put("Battery", String.valueOf(data.get(data.size() - 1).getField(i+1)));
-                    fieldList.add(hashMap);
+                int n = 0;
+                for (int i = 1; i < 9; i++) {
+                    //  if (data.get(data.size() - 1).getField(i) != null ) {
+                    ;
+                    HashMap<String, String> hashMap = new HashMap<>();
+                    if(i % 2 != 0 && data.get(data.size() - 1).getField(i) != null) {
+                        hashMap.put("Field", String.valueOf(data.get(data.size() - 1).getField(i)));
+                        hashMap.put("Field_id", String.valueOf(channelId));
+                        hashMap.put("Battery", String.valueOf(data.get(data.size() - 1).getField(i+1)));
+                        fieldList.add(hashMap);
+                    }
+                    //else  Toast.makeText(getApplicationContext(), String.valueOf(i), Toast.LENGTH_SHORT).show();  //尝试是否读取到其他栏位 （可以不要）
                 }
-                //else  Toast.makeText(getApplicationContext(), String.valueOf(i), Toast.LENGTH_SHORT).show();  //尝试是否读取到其他栏位 （可以不要）
-            }
 
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));       // 控制recyclerView
-            myListAdapter = new MyListAdapter(fieldList , tsChart);                     // 控制recyclerView
-            recyclerView.setAdapter(myListAdapter);                                     // 控制recyclerView
-            swipeRefreshLayout.setRefreshing(false);     //隐藏刷新圈
-    });}
-
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));       // 控制recyclerView
+                myListAdapter = new MyListAdapter(fieldList, tsChart);                      // 控制recyclerView
+                recyclerView.setAdapter(myListAdapter);                                     // 控制recyclerView
+                swipeRefreshLayout.setRefreshing(false);                                    // 隐藏刷新圈
+            });
+        }
     }
 
 
@@ -135,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
             fieldList = new LinkedList<>();
             int n = 0;
+
             for (int i = 1; i < 9; i++) {
               //  if (data.get(data.size() - 1).getField(i) != null ) {
 ;
@@ -168,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     public void reflesh_timer(){
         LoadFeedTest();   //要跑的程序
-        Toast.makeText(MainActivity.this, String.valueOf(time_set), Toast.LENGTH_LONG).show();
+//        Toast.makeText(MainActivity.this, String.valueOf(time_set), Toast.LENGTH_LONG).show();
         //count ++ ;
         refreash_prog(time_set); // 30 sec
     }

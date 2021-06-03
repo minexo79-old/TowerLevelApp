@@ -51,7 +51,7 @@
                 android:id="@+id/field"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Filed ID :"
+                android:text="Filed ID: "
                 android:textColor="@color/colorText"
                 android:textSize="20sp" />
 
@@ -75,32 +75,33 @@
         <LinearLayout
             android:id="@+id/lineraLayout_2"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:orientation="horizontal"
-            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lineraLayout_1">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Filed number :"
+                android:layout_height="wrap_content"
+                android:text="@string/Tower_MaxLength"
                 android:textColor="@color/colorText"
                 android:textSize="20sp" />
 
-            <Spinner
-                android:id="@+id/spfilednum"
+
+
+            <EditText
+                android:id="@+id/edtTowerHeight"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:gravity="center"
-                android:spinnerMode="dropdown"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:layout_height="wrap_content"
+                android:hint="公分"
+                android:inputType="number"
+                android:gravity="right"
+                android:textColor="@color/colorText"
+                android:textColorHint="@color/colorText"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -117,7 +118,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="API_KEY :"
+                android:text="API_KEY: "
                 android:textColor="@color/colorText"
                 android:textSize="20sp" />
 
@@ -125,7 +126,7 @@
                 android:id="@+id/edtApiKey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint=" 1234567 "
+                android:hint="1234567ABCDEFG"
                 android:inputType="text"
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorText"
@@ -147,7 +148,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="侦测时间"
+                android:text= "@string/Tower_CollectTime_Hint"
                 android:textColor="@color/colorText"
                 android:textSize="20sp" />
 
@@ -165,7 +166,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="分钟"
+                    android:text="@string/Tower_Minute_Hint"
                     android:textColor="@color/colorText"
                     android:textSize="18dp" />
             </LinearLayout>
@@ -186,7 +187,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="水量预警通知"
+                    android:text="@string/Tower_Warning_Hint"
                     android:textColor="@color/colorText"
                     android:textSize="20sp" />
 
@@ -214,7 +215,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="水量通知"
+                    android:text="@string/Tower_WarningSet_Hint"
                     android:textColor="@color/colorText"
                     android:textSize="20sp" />
 
@@ -247,6 +248,7 @@
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

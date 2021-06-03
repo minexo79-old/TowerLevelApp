@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">ThingSpeakLib</string>
+    <string name="Tower_MaxLength">最高水位(塔內深度): </string>
+    <string name="Tower_CollectTime_Hint">偵測時間: </string>
+    <string name="Tower_Minute_Hint">分鐘</string>
+    <string name="Tower_Warning_Hint">水量預警通知</string>
+    <string name="Tower_WarningSet_Hint">警戒比例: </string>
     <string-array name="fieldnum">
         <item>1</item>
         <item>2</item>
