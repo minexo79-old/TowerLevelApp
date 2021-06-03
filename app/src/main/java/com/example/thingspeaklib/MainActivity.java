@@ -1,111 +1,188 @@
 package com.example.thingspeaklib;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.macroyau.thingspeakandroid.ThingSpeakChannel;
 import com.macroyau.thingspeakandroid.ThingSpeakLineChart;
-import com.macroyau.thingspeakandroid.model.ChannelFeed;
 import com.macroyau.thingspeakandroid.model.Feed;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
-import lecho.lib.hellocharts.model.ColumnChartData;
-import lecho.lib.hellocharts.model.LineChartData;
-import lecho.lib.hellocharts.model.Viewport;
-import lecho.lib.hellocharts.view.ColumnChartView;
 import lecho.lib.hellocharts.view.LineChartView;
-
-public class MainActivity extends AppCompatActivity {
+/*   ------ write by chiseng --------*/
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private ThingSpeakChannel tsChannel;
     private ThingSpeakLineChart tsChart;
     private LineChartView chartView;
-    private TextView textviewRes, textviewId;
-    //ThingSpeakChannel tsPrivateChannel = new ThingSpeakChannel(CHANNEL_ID, READ_API_KEY);
+    private TextView textviewRes, textviewId;    //item
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
+    private MyListAdapter myListAdapter;
+    String Api_Key = "J27YPQ7GWCKIVB82";
+
+    int time_set = 60000;
+   // int cardnum = 0;
+    LinkedList<HashMap<String, String>> fieldList; // recycleview 传送资料
+    LinkedList<Integer> field_id_List;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textviewRes = (TextView)findViewById(R.id.txtres);
-        textviewId  = (TextView)findViewById(R.id.txtid);
+       // LoadFeed();
 
-        LoadFeed();
-        Loadgraf();
-    }
+        field_id_List = new LinkedList<>();
+        field_id_List.add(1383016);
+        field_id_List.add(950541);
 
-   /* private void Bargrap(){
-        ColumnChartView barChart = findViewById(R.id.barchart);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
-        ArrayList<ColumnChartData> data = new ArrayList<>();
-        data.add(new ColumnChartData(100));
+        recyclerView = findViewById(R.id.recyclerViewItem);
 
-    }*/
 
-    private void LoadFeed() {
-        // Connect to ThinkSpeak Channel 9
-        tsChannel = new ThingSpeakChannel(1394850, "2K2DS74416P4B6V1");
-        // Set listener for Channel feed update events
-        tsChannel.setChannelFieldFeedUpdateListener((channelId, fieldId, channelFieldFeed) -> {
-            // Catch Feed
-            List<Feed> data = channelFieldFeed.getFeeds();
-            // Get Last Entry Data from Feed
-            textviewId.setText("水塔編號：" + channelId);
-            textviewRes.setText("目前水位：" + data.get(data.size() - 1).getField1() + "cm");
+        Bundle bundle = getIntent().getExtras();
+       //  int cardnum = bundle.getInt("Cardnum");
+
+
+       // time_set = bundle.getInt("time_set");
+
+
+
+
+        ImageView imageAddMain = findViewById(R.id.imageAdd);
+        imageAddMain.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, add_menu.class);
+               // intent.putExtra("cardnum", cardnum);
+                startActivityForResult(intent, 2);
+            }
         });
+        reflesh_timer();
+      //  LoadFeedTest();
 
-        tsChannel.loadChannelFieldFeed(1);
     }
 
-    private void Loadgraf() {
-        // Fetch the specific Channel feed
+    private void LoadFeedTest(){
+
+        fieldList = new LinkedList<>();
+
+        for(int f = 0 ; f < field_id_List.size() ; f ++){
+        tsChannel = new ThingSpeakChannel(field_id_List.get(f));
         tsChannel.loadChannelFeed();
 
-        // Create a Calendar object dated 5 minutes ago
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, -5);
+        tsChannel.setChannelFeedUpdateListener((channelId, fieldId, channelFeed) -> {        // Set listener for Channel feed update events
 
-        // Configure LineChartView
-        chartView = findViewById(R.id.chart);
-        chartView.setZoomEnabled(false);
-        chartView.setValueSelectionEnabled(true);
+            List<Feed> data = channelFeed.getFeeds();       // Catch Feed // Get Last Entry Data from Feed
 
-        // Create a line chart from Field1 of ThinkSpeak Channel
-        tsChart = new ThingSpeakLineChart( 1394850, 1, "2K2DS74416P4B6V1");
+            int n = 0;
+            for (int i = 1; i < 9; i++) {
+                //  if (data.get(data.size() - 1).getField(i) != null ) {
+                ;
+                HashMap<String, String> hashMap = new HashMap<>();
+                if(i % 2 != 0 && data.get(data.size() - 1).getField(i) != null) {
+                    hashMap.put("Field", String.valueOf(data.get(data.size() - 1).getField(i)));
+                    hashMap.put("Field_id", String.valueOf(channelId));
+                    hashMap.put("Battery", String.valueOf(data.get(data.size() - 1).getField(i+1)));
+                    fieldList.add(hashMap);
+                }
+                //else  Toast.makeText(getApplicationContext(), String.valueOf(i), Toast.LENGTH_SHORT).show();  //尝试是否读取到其他栏位 （可以不要）
+            }
 
-        // Get 200 entries at maximum 显示多少比数据
-        tsChart.setNumberOfEntries(10);
-        // Set value axis labels on 10-unit interval
-        tsChart.setValueAxisLabelInterval(10);
-        // Set date axis labels on 5-minute interval
-        tsChart.setDateAxisLabelInterval(1);
-        // Show the line as a cubic spline
-        tsChart.useSpline(true);
-        // Set the line color
-        tsChart.setLineColor(Color.parseColor("#0086D3"));
-        // Set the axis color
-        tsChart.setAxisColor(Color.parseColor("#FFFFFF"));
-        // Set the starting date (5 minutes ago) for the default viewport of the chart
-        tsChart.setChartStartDate(calendar.getTime());
-        // Set listener for chart data update
-        tsChart.setListener((channelId, fieldId, title, lineChartData, maxViewport, initialViewport) -> {
-            // Set chart data to the LineChartView
-            chartView.setLineChartData(lineChartData);
-            // Set scrolling bounds of the chart
-            chartView.setMaximumViewport(maxViewport);
-            // Set the initial chart bounds
-            chartView.setCurrentViewport(initialViewport);
-        });
-        // Load chart data asynchronously
-        tsChart.loadChartData();
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));       // 控制recyclerView
+            myListAdapter = new MyListAdapter(fieldList , tsChart);                     // 控制recyclerView
+            recyclerView.setAdapter(myListAdapter);                                     // 控制recyclerView
+            swipeRefreshLayout.setRefreshing(false);     //隐藏刷新圈
+    });}
+
     }
+
+
+    private void LoadFeed() {
+
+        tsChannel = new ThingSpeakChannel(field_id_List.get(1));
+        tsChannel.loadChannelFeed();
+
+
+        tsChannel.setChannelFeedUpdateListener((channelId, fieldId, channelFeed) -> {        // Set listener for Channel feed update events
+
+
+            List<Feed> data = channelFeed.getFeeds();       // Catch Feed // Get Last Entry Data from Feed
+
+            fieldList = new LinkedList<>();
+            int n = 0;
+            for (int i = 1; i < 9; i++) {
+              //  if (data.get(data.size() - 1).getField(i) != null ) {
+;
+                    HashMap<String, String> hashMap = new HashMap<>();
+                    if(i % 2 != 0 && data.get(data.size() - 1).getField(i) != null) {
+                        hashMap.put("Field", String.valueOf(data.get(data.size() - 1).getField(i)));
+                        hashMap.put("Field_id", String.valueOf(channelId));
+                        hashMap.put("Battery", String.valueOf(data.get(data.size() - 1).getField(i+1)));
+                        fieldList.add(hashMap);
+
+
+            }
+            //else  Toast.makeText(getApplicationContext(), String.valueOf(i), Toast.LENGTH_SHORT).show();  //尝试是否读取到其他栏位 （可以不要）
+
+            }
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));       // 控制recyclerView
+            myListAdapter = new MyListAdapter(fieldList , tsChart);                     // 控制recyclerView
+            recyclerView.setAdapter(myListAdapter);                                     // 控制recyclerView
+            swipeRefreshLayout.setRefreshing(false);     //隐藏刷新圈
+        });
+
+    }
+
+
+
+    @Override
+    public void onRefresh() {
+        //LoadFeed();
+        LoadFeedTest();
+    }
+
+    public void reflesh_timer(){
+        LoadFeedTest();   //要跑的程序
+        Toast.makeText(MainActivity.this, String.valueOf(time_set), Toast.LENGTH_LONG).show();
+        //count ++ ;
+        refreash_prog(time_set); // 30 sec
+    }
+
+    private void refreash_prog(int milliseconds){
+        final Handler handler = new Handler(); // 助手
+
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                reflesh_timer();
+            }
+        };
+        handler.postDelayed(runnable,milliseconds);
+    }
+
 }
