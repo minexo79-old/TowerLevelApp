@@ -34,7 +34,8 @@
             android:src="@drawable/ic_done"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/colorIcon" />
+            app:tint="@color/colorIcon"
+            />
 
         <LinearLayout
             android:id="@+id/lineraLayout_1"
@@ -51,7 +52,7 @@
                 android:id="@+id/field"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Filed ID: "
+                android:text="Field ID: "
                 android:textColor="@color/colorText"
                 android:textSize="20sp" />
 
@@ -60,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint=" field id"
+                android:hint=" Field_id"
                 android:inputType="number"
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorText"
@@ -86,19 +87,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/Tower_MaxLength"
+                android:text="API_KEY: "
                 android:textColor="@color/colorText"
                 android:textSize="20sp" />
 
-
-
             <EditText
-                android:id="@+id/edtTowerHeight"
+                android:id="@+id/edtApiKey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="公分"
-                android:inputType="number"
-                android:gravity="right"
+                android:gravity="center"
+                android:hint="Api_key"
+                android:inputType="text"
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorText"
                 android:textSize="20sp" />
@@ -118,19 +117,22 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="API_KEY: "
+                android:text="@string/Tower_MaxLength"
                 android:textColor="@color/colorText"
                 android:textSize="20sp" />
 
+
             <EditText
-                android:id="@+id/edtApiKey"
+                android:id="@+id/edtTowerHeight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="1234567ABCDEFG"
-                android:inputType="text"
+                android:gravity="center"
+                android:hint="公分(cm)"
+                android:inputType="number"
                 android:textColor="@color/colorText"
                 android:textColorHint="@color/colorText"
                 android:textSize="20sp" />
+
         </LinearLayout>
 
 
@@ -148,7 +150,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text= "@string/Tower_CollectTime_Hint"
+                android:text="@string/Tower_CollectTime_Hint"
                 android:textColor="@color/colorText"
                 android:textSize="20sp" />
 
@@ -172,28 +174,67 @@
             </LinearLayout>
         </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/lineraLayout_6"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                app:layout_constraintTop_toBottomOf="@id/lineraLayout_4"
-                app:layout_constraintStart_toStartOf="parent">
+        <LinearLayout
+            android:id="@+id/lineraLayout_6"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lineraLayout_4"
+            android:visibility="gone">
 
-                <Switch
-                    android:id="@+id/watersw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/Tower_Warning_Hint"
-                    android:textColor="@color/colorText"
-                    android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="最大值:"
+                android:textColor="@color/colorText"
+                android:textSize="20sp"/>
+            <EditText
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorText"
+                android:textSize="18sp"
+                android:inputType="number"
+                android:text="100"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="最小值:"
+                android:textColor="@color/colorText"
+                android:textSize="20sp"/>
+            <EditText
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorText"
+                android:textSize="18sp"
+                android:inputType="number"
+                android:text="100"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lineraLayout_7"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lineraLayout_6">
+
+            <Switch
+                android:id="@+id/watersw"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/Tower_Warning_Hint"
+                android:textColor="@color/colorText"
+                android:textSize="20sp" />
 
 
-            </LinearLayout>
-
+        </LinearLayout>
 
 
         <RelativeLayout
@@ -204,7 +245,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginEnd="20dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lineraLayout_6">
+            app:layout_constraintTop_toBottomOf="@id/lineraLayout_7">
 
             <LinearLayout
                 android:id="@+id/lineraLayout_5"
