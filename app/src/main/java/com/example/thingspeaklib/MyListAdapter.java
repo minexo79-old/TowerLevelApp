@@ -63,11 +63,11 @@ class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
         int depth = Integer.parseInt(fieldList.get(position).get("Depth"));
 
         holder.textviewId.setText("水塔編號   " + channel_id);
-        holder.textviewRes.setText("目前水位：" + (10 - current_depth) + " 公分");
+        holder.textviewRes.setText("目前水位：" + (depth - current_depth) + " 公分");
         // set max = 10
-        holder.progressbar.setProgress(10 - current_depth, true);
+        holder.progressbar.setProgress(depth - current_depth, true);
         // max value = 100/10
-        holder.textvolume.setText((String.format("%.1f", 100.0 - (current_depth) * 10.0)) + "%");
+        holder.textvolume.setText((String.format("%.1f", (depth - current_depth) * (100.0 / depth))) + "%");
 
         if (String.valueOf(fieldList.get(position).get("Battery")) == "null") {
             holder.textviewbty.setText((String.valueOf(fieldList.get(position).get("Battery"))));
