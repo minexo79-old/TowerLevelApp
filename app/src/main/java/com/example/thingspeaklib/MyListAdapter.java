@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.macroyau.thingspeakandroid.ThingSpeakLineChart;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.sql.DriverPropertyInfo;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -26,6 +28,7 @@ import java.util.Objects;
 import lecho.lib.hellocharts.view.LineChartView;
 
 import static android.content.ContentValues.TAG;
+import static android.os.ParcelFileDescriptor.MODE_APPEND;
 
 class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
 
@@ -34,6 +37,7 @@ class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
     public LineChartView chartView;
     int last_id = 0, count;
     int last_check = 0;
+    int set_point = 0;
     ColorDrawable colorget;
 
     //帶入ArrayList作為資料
@@ -54,12 +58,16 @@ class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) { //(background colour) to do something
 
-        holder.textviewId.setText("水塔編號   " + fieldList.get(position).get("Field_id"));
-        holder.textviewRes.setText("目前水位：" + (10 - Integer.parseInt(fieldList.get(position).get("Field"))) + " 公分");
+        int channel_id = Integer.parseInt(fieldList.get(position).get("Field_id"));
+        int current_depth = Integer.parseInt(fieldList.get(position).get("Field"));
+        int depth = Integer.parseInt(fieldList.get(position).get("Depth"));
+
+        holder.textviewId.setText("水塔編號   " + channel_id);
+        holder.textviewRes.setText("目前水位：" + (10 - current_depth) + " 公分");
         // set max = 10
-        holder.progressbar.setProgress(10 - Integer.valueOf(fieldList.get(position).get("Field")),true);
+        holder.progressbar.setProgress(10 - current_depth, true);
         // max value = 100/10
-        holder.textvolume.setText((String.format("%.1f",100.0 - (Integer.valueOf(fieldList.get(position).get("Field")))*10.0))+"%");
+        holder.textvolume.setText((String.format("%.1f", 100.0 - (current_depth) * 10.0)) + "%");
 
         if (String.valueOf(fieldList.get(position).get("Battery")) == "null") {
             holder.textviewbty.setText((String.valueOf(fieldList.get(position).get("Battery"))));
@@ -76,17 +84,17 @@ class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
         holder.chartView.setValueSelectionEnabled(true);
 
 
-        if (position != 0 && Integer.valueOf(fieldList.get(position).get("Field_id")) == last_check) {
-            last_check = Integer.valueOf(fieldList.get(position).get("Field_id"));
+        if (position != 0 && Integer.valueOf(channel_id) == last_check) {
+            last_check = Integer.valueOf(channel_id);
             last_id = last_id + 2;
             holder.background_color.setBackground(colorget);
         } else if (position == 0) {
-            last_check = Integer.valueOf(fieldList.get(position).get("Field_id"));
+            last_check = Integer.valueOf(channel_id);
             last_id = 1;
             colorget = set_color.getRandomDrawbleColor();
             holder.background_color.setBackground(colorget);
-        } else if (last_check != Integer.valueOf(fieldList.get(position).get("Field_id"))) {
-            last_check = Integer.valueOf(fieldList.get(position).get("Field_id"));
+        } else if (last_check != Integer.valueOf(channel_id)) {
+            last_check = Integer.valueOf(channel_id);
             last_id = 1;
             colorget = set_color.getRandomDrawbleColor();
             holder.background_color.setBackground(colorget);
@@ -94,7 +102,7 @@ class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
 
 
         // Create a line chart from Field1 of ThinkSpeak Channel
-        tsChart = new ThingSpeakLineChart(Integer.valueOf(fieldList.get(position).get("Field_id")), last_id);
+        tsChart = new ThingSpeakLineChart(channel_id, last_id);
 
         // Get 10 entries at maximum 显示多少比数据
         tsChart.setNumberOfEntries(10);
@@ -132,7 +140,7 @@ class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textviewId, textviewRes, textviewbty,textvolume;
+        public TextView textviewId, textviewRes, textviewbty, textvolume;
         public LineChartView chartView;
         public ImageView background_color, battery_img;
         public ProgressBar progressbar;

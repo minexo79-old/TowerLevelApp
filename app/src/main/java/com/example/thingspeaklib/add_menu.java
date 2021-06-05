@@ -15,21 +15,32 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class add_menu extends AppCompatActivity {
-    private EditText fieldid,edtApiKey;  //fieldnum 可能会换选单模式
+    private EditText deviceId,deviceApi,maxDepth;  //fieldnum 可能会换选单模式
     private RelativeLayout waterset;
     private SeekBar sb_waterlv;
-    int cardnum ;
-
+    private int field_id ,water_lv,time_set,water_alm ;
+    private String api_key;
+   // private static final String FILE_NAME = "example.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_add_menu);
-        Intent intent = getIntent();
-       cardnum = intent.getIntExtra("cardnum",cardnum);
+
+        deviceId =(EditText)findViewById(R.id.fieldid);
+        deviceApi = (EditText)findViewById(R.id.edtApiKey);
+        maxDepth = (EditText)findViewById(R.id.edtTowerHeight);
+
 
         waterset=(RelativeLayout)findViewById(R.id.waterset);
         waterset.setVisibility(View.GONE);
@@ -44,15 +55,6 @@ public class add_menu extends AppCompatActivity {
             }
         });
 
-     /*   Spinner spinner = (Spinner) findViewById(R.id.spfilednum);   //spinner 1   //没用到
-        ArrayAdapter<CharSequence>adapter = ArrayAdapter.createFromResource(this,
-                R.array.fieldnum,
-                android.R.layout.simple_spinner_dropdown_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setSelection(1,false);
-        spinner.setBackgroundColor(Color.parseColor("#434343"));
-        spinner.setOnItemSelectedListener(spnOnItemSelected);*/
 
         Spinner spinner2 = (Spinner) findViewById(R.id.chktime);   //spinner2
         ArrayAdapter<CharSequence>adapter2 = ArrayAdapter.createFromResource(this,
@@ -77,53 +79,52 @@ public class add_menu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent();
-                intent.setClass(add_menu.this, MainActivity.class);
+                if (deviceId.getText().toString().isEmpty() == false && maxDepth.getText().toString().isEmpty() == false)
+                    save_data();
+                if (deviceId.getText().toString().isEmpty() == false && maxDepth.getText().toString().isEmpty() == true) {
+                    Toast.makeText(add_menu.this, "请填入水位高度", Toast.LENGTH_SHORT).show();
+                } else {
 
-                Bundle bundle = new Bundle();
-                bundle.putInt("Cardnum",cardnum);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                //onBackPressed();
-                // finish();
+                    Intent intent = new Intent();
+                    // intent.setClass(add_menu.this, MainActivity.class);
+
+                    Bundle bundle = new Bundle();
+                    //  bundle.putString("Field_id",fieldid.getText().toString());
+                    // bundle.putString("Api_key",edtApiKey.getText().toString());
+                    bundle.putInt("Water_lv", water_lv);
+                    bundle.putInt("Time_set", time_set);
+                    bundle.putInt("water_alm", water_alm);
+                    intent.putExtras(bundle);
+                    setResult(RESULT_OK, intent);
+                    add_menu.this.finish();
+                }
             }
+
         });
     }
 
 
-   /* private AdapterView.OnItemSelectedListener spnOnItemSelected = new AdapterView.OnItemSelectedListener() {  //spinner1  占时没用
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            //选好的时候
-            int spnfield = position;
-            String spnselected = parent.getSelectedItem().toString();
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-                //没选的时候
-        }
-    };*/
 
     private AdapterView.OnItemSelectedListener spnOnItemSelected2 = new AdapterView.OnItemSelectedListener() {   //spinner2
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             //选好的时候
-            int spnfield = position;
-            String spnselected = parent.getSelectedItem().toString();
-            Intent intent = new Intent();
-            intent.setClass(add_menu.this, MainActivity.class);
-            intent.putExtra("time_set",spnfield*10000);
+            Integer[] time_sec = new Integer[]{1,3,5,10,15,20 };
+            time_set = time_sec[position];
+            //spinner2.setSelection(0,false);
+            //spnfield =  parent.getSelectedItem().toString();
+
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
             //没选的时候
+            time_set =60000;
         }
     };
-    /*private void bindViews() {   //伸缩条设定
-        sb_normal = (SeekBar) findViewById(R.id.sb_normal);
-        txt_cur = (TextView) findViewById(R.id.txt_cur);
+   /* private void bindViews() {   //伸缩条设定
+        sb_waterlv = (SeekBar) findViewById(R.id.seekBar);
+       // txt_cur = (TextView) findViewById(R.id.txt_cur);
         sb_normal.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -141,4 +142,21 @@ public class add_menu extends AppCompatActivity {
             }
         });
     }*/
+
+    public void save_data(){
+        // TODO 檔案處理 寫入設定檔
+        try {
+            FileOutputStream fout = openFileOutput("device.txt", MODE_APPEND);
+            BufferedOutputStream buffout = new BufferedOutputStream(fout);
+            String device_id = deviceId.getText().toString();
+//                String channel_api = deviceApi.getText().toString();
+            String max_depth = maxDepth.getText().toString();
+//                String str = device_id + ',' + channel_api + ',' + max_depth + '\n';
+            String str = device_id + ',' + max_depth + '\n';
+            buffout.write(str.getBytes());
+            buffout.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
