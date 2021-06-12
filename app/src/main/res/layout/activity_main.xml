@@ -27,6 +27,18 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ImageView
+        android:id="@+id/imageList"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/background_list_button"
+        android:padding="15dp"
+        android:src="@drawable/ic_list"
+        app:layout_constraintBottom_toTopOf="@+id/imageAdd"
+        app:layout_constraintEnd_toEndOf="@+id/swipe_refresh" />
+
+    <ImageView
             android:id="@+id/imageAdd"
             android:layout_width="50dp"
             android:layout_height="50dp"
