@@ -8,8 +8,19 @@
     android:background="@color/gray"
     tools:context=".list_menu">
 
+
     <ListView
         android:id="@+id/ListDevice"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/ListText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        tools:text="ListTextDemo" />
 </LinearLayout>

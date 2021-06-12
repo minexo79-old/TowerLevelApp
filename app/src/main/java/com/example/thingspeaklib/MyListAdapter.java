@@ -81,7 +81,8 @@ class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder> {
             holder.textviewbty.setText((String.valueOf(fieldList.get(position).get("Battery"))));
 //          holder.battery_img.setBackgroundResource(R.drawable.ic_unknown);
         } else
-            holder.textviewbty.setText(String.format("%.0f %%", Double.valueOf(fieldList.get(position).get("Battery")) * 25.64));
+            holder.textviewbty.setText(String.format("%.0f %%",
+                    (Double.valueOf(fieldList.get(position).get("Battery")) - 2.9) * 100));
 //          holder.textviewbty.setText((String.format("%.1f", (Double.valueOf(fieldList.get(position).get("Battery")) - 3) * 83.3)) + "% ");
 
 

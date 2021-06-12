@@ -90,7 +90,8 @@ public class add_menu extends AppCompatActivity {
 
             String Warning = new String();
             // 欄位強制輸入檢查
-            if(maxDepth.getText().toString().isEmpty() == false && deviceId.getText().toString().isEmpty() == false)save_data();
+            if(maxDepth.getText().toString().isEmpty() == false && deviceId.getText().toString().isEmpty() == false)
+                save_data();
             else if (deviceId.getText().toString().isEmpty() == false ) {
                 if (maxDepth.getText().toString().isEmpty())
                     Warning += "最高水位"; }
