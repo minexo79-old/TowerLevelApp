@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private static final String FILE_NAME = "device.json";
     int time_set = 1;
     int water_set = 0; //default "%"
-    private NotificationManagerCompat notificationManager;
+    private NotificationManagerCompat notificationManager;W
     public static final String CHANNEL_1_ID = "warning_channel";
 
     LinkedList<HashMap<String, String>> fieldList; // recycleview 传送资料
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 Notification notification = new NotificationCompat.Builder(this,CHANNEL_1_ID)
                         .setSmallIcon(R.drawable.ic_add)
                         .setContentTitle("水塔編號  "+fieldList.get(i).get("Field_id"))
-                        .setContentText("目前水塔水量只剩下" + water_set + "%" + "\n" +"目前水塔水量只剩下" + water + "%"+"，請做好節約用水的準備!!")
+                        .setContentText("目前水塔水量只剩下" + water + "%"+"，請做好節約用水的準備!!")
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                         .build();
