@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         listener();
         load_data();
+        reflesh_timer();
     }
 
 
@@ -132,15 +133,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                   }alm_check();
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));     // 控制recyclerView
                 myListAdapter = new MyListAdapter(fieldList, tsChart);                  // 控制recyclerView
+                recyclerView.setAdapter(myListAdapter);                           // 控制recyclerView
             });
         }
-        if(channelList.size() > 0)
-            recyclerView.setAdapter(myListAdapter);                            // 控制recyclerView
+        if(channelList.size() > 0){}
+
         else {
             recyclerView.setAdapter(null);                                     // 控制recyclerView, 清除內容
             addDeviceHintShow();
         }
         swipeRefreshLayout.setRefreshing(false);// 隐藏刷新圈
+
     }
 
 
@@ -149,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {     //画面回到来的时候就进行提取
         super.onActivityResult(requestCode, resultCode, data);
         String text = "";
         if (resultCode == RESULT_OK) {
@@ -157,21 +160,21 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 Bundle bundle = data.getExtras();
                 //String field_id = bundle.getString("Field_id");
                // String api_key = bundle.getString("Api_key");
-               // String water_lv = bundle.getString("Water_lv");
+                Boolean water_sw = bundle.getBoolean("Water_sw");
                 Integer count_time = bundle.getInt("Time_set");
                 Integer water_alm = bundle.getInt("water_alm");
 
-                if (count_time != time_set && count_time > 1) {
+                if (count_time != time_set && count_time > 0) {
                     time_set = count_time;
-                    text = "时间更新为 " + time_set +"分钟" ;
-                } else if (count_time < 1) {
-                    time_set = 1;  // 不知为什么会变0
-                    text = "时间更新为 " + time_set +"分钟" ;
+                    text += "时间更新为 " + time_set +"分钟" ;
                 }
-                if (water_set != water_alm){
-                    water_set = water_alm ;
-                    text += "\n" + "水量设定值为 " + water_set + "%";
-                }
+                if (water_sw == true){
+                    if (water_set != water_alm){
+                        water_set = water_alm ;
+                        if (text != "") text += "\n";
+                        text += "水量设定值为 " + water_set + "%";
+                }}
+                if (text != "")
                 Toast.makeText(MainActivity.this, text , Toast.LENGTH_LONG ).show();
             }
         }
@@ -184,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
 
-    private void alm_check(){
+    private void alm_check(){  //预警通知
         NotificationChannel Channel1 = new NotificationChannel(CHANNEL_1_ID, "Channel 1", NotificationManager.IMPORTANCE_HIGH);
         NotificationManager manager = getSystemService(NotificationManager.class);
 
@@ -219,28 +222,26 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
 
-
-
     public void reflesh_timer() {
-        load_feed();   //要跑的程序
-        refreash_prog(time_set * 60000); // 30 sec
+        
+        refreash_prog(60000);
+
     }
 
 
 
-
-
-
-    private void refreash_prog(int milliseconds) {
+    private void refreash_prog(int milliseconds) {      //背景执行时间计算
         final Handler handler = new Handler(); // 助手
         final Runnable runnable = new Runnable() {
             @Override
-            public void run() {
+            public void run() {     //要跑的程序
+                reflesh_timer();
                 if(channelList != null)
-                    reflesh_timer();
+                load_feed();
             }
         };
-        handler.postDelayed(runnable, milliseconds);
+        if (time_set != milliseconds)handler.removeCallbacks(runnable);
+        handler.postDelayed(runnable, milliseconds*time_set);
     }
 
 

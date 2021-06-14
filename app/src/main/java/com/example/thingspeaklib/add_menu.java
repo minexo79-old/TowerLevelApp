@@ -34,7 +34,8 @@ import java.util.List;
 
 public class add_menu extends AppCompatActivity {
     private EditText deviceId, deviceApi, maxDepth;  //fieldnum 可能会换选单模式
-    private int field_id, water_lv, time_set, water_alm;
+    private int field_id, time_set, water_alm;
+    private Boolean water_sw = false;
     private String api_key;
     private List<Channel> channelList;
     private tsChannelList channel;
@@ -68,11 +69,13 @@ public class add_menu extends AppCompatActivity {
         RelativeLayout waterset = findViewById(R.id.waterset);
         waterset.setVisibility(View.GONE);
         Switch watersw = findViewById(R.id.watersw);
+        water_sw = false;
         watersw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked == true) {
                     waterset.setVisibility(View.VISIBLE);
+                    water_sw = true;
                 } else waterset.setVisibility(View.GONE);
             }
         });
@@ -108,7 +111,7 @@ public class add_menu extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     //  bundle.putString("Field_id",fieldid.getText().toString());
                     //  bundle.putString("Api_key",edtApiKey.getText().toString());
-                    //  bundle.putInt("Water_lv", water_lv);
+                    bundle.putBoolean("Water_sw", water_sw);
                     bundle.putInt("Time_set", time_set);
                     bundle.putInt("water_alm", water_alm);
                     intent.putExtras(bundle);
@@ -126,7 +129,7 @@ public class add_menu extends AppCompatActivity {
 
     private void spinner_loop(){
         Spinner spinner2 = findViewById(R.id.chktime);   //spinner2
-        final Integer[] time_sec = new Integer[]{1, 3, 5, 10, 15, 20,25};
+        final Integer[] time_sec = new Integer[]{0,1, 3, 5, 10, 15, 20,25};
         ArrayAdapter<Integer> adapter2 = new ArrayAdapter(add_menu.this,
                 android.R.layout.simple_dropdown_item_1line,time_sec);
         // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -137,13 +140,13 @@ public class add_menu extends AppCompatActivity {
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                time_set = time_sec[0];
+                time_set = time_sec[position];
 
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                time_set = 0;
             }
         });
     }
