@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 load_feed();
             }
         };
-        if (time_set != milliseconds)handler.removeCallbacks(runnable);
+       // if (time_set != milliseconds)handler.removeCallbacks(runnable);
         handler.postDelayed(runnable, milliseconds*time_set);
     }
 
